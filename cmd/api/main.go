@@ -1,22 +1,37 @@
-// cmd/api/main.go
 package main
 
 import (
 	"log"
-	"net/http"
+	"os"
 
+	"github.com/balqadishaPRO/Emoji-Hub/internal/handler"
+	"github.com/balqadishaPRO/Emoji-Hub/internal/middleware"
+	"github.com/balqadishaPRO/Emoji-Hub/internal/repo"
+	"github.com/balqadishaPRO/Emoji-Hub/internal/service"
+
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	r := gin.Default()
+	_ = godotenv.Load()
 
-	r.GET("/healthz", func(c *gin.Context) {
-		c.String(http.StatusOK, "ok")
-	})
-
-	// TODO: /emoji , /emoji/:id
-	if err := r.Run(":8080"); err != nil {
+	repo, err := repo.New(os.Getenv("DATABASE_URL"))
+	if err != nil {
 		log.Fatal(err)
 	}
+	svc := &service.EmojiService{Repo: repo}
+
+	r := gin.Default()
+
+	r.Use(middleware.Session())
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:5173"},
+		AllowMethods:     []string{"GET", "POST", "DELETE"},
+		AllowCredentials: true,
+	}))
+
+	handler.Register(r, svc)
+	log.Fatal(r.Run(":8080"))
 }
