@@ -2,10 +2,12 @@
 FROM golang:1.24.1-alpine AS builder
 
 WORKDIR /app
-COPY . . 
+COPY . .  
 
-RUN go mod download
-RUN CGO_ENABLED=0 GOOS=linux go build -o main .
+# Navigate to the directory containing main.go and build
+RUN cd cmd/api && \
+    go mod download && \
+    CGO_ENABLED=0 GOOS=linux go build -o ../../main .
 
 FROM alpine:latest
 WORKDIR /root/
