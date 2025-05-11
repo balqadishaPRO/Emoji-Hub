@@ -27,11 +27,20 @@ func main() {
 
 	r.Use(middleware.Session())
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173"},
+		AllowOrigins: []string{
+			"http://localhost:5173",
+			"https://your-frontend-domain.com",
+		},
 		AllowMethods:     []string{"GET", "POST", "DELETE"},
 		AllowCredentials: true,
 	}))
 
 	handler.Register(r, svc)
-	log.Fatal(r.Run(":8080"))
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	log.Fatal(r.Run(":" + port))
 }
