@@ -33,5 +33,11 @@ func main() {
 	}))
 
 	handler.Register(r, svc)
-	log.Fatal(r.Run(":8080"))
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	log.Fatal(r.Run(":" + port))
 }
