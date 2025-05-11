@@ -8,15 +8,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Register(r *gin.Engine, svc *service.EmojiService) {
+func Register(r gin.IRouter, svc *service.EmojiService) {
 	r.GET("/emoji", func(c *gin.Context) {
 		p := repo.ListParams{
 			Search:   c.Query("search"),
 			Category: c.Query("category"),
 			Group:    c.Query("group"),
 			Sort:     c.DefaultQuery("sort", "name"),
-			Limit:    atoi(c.DefaultQuery("limit", "50")),
-			Offset:   (atoi(c.DefaultQuery("page", "1")) - 1) * 50,
+			Limit:    2000,
+			Offset:   0,
 		}
 		list, err := svc.List(c, p)
 		if err != nil {

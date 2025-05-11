@@ -11,6 +11,7 @@ const emojihubURL = "https://emojihub.yurace.pro/api/all"
 var client = &http.Client{Timeout: 10 * time.Second}
 
 type EmojiRaw struct {
+	ID       string   `json:"id"`
 	Name     string   `json:"name"`
 	Category string   `json:"category"`
 	Group    string   `json:"group"`

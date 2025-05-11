@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emoji Catalog - Emoji Hub</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="/" class="logo">Emoji Hub</a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/catalog.html" class="active">Catalog</a>
+                <a href="/favorites.html">Favorites</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="catalog-content">
+        <div class="search-bar">
+            <input type="text" class="search-input" placeholder="Search emojis..." id="searchInput">
+            <select class="filter-select" id="categoryFilter">
+                <option value="">All Categories</option>
+                <option value="smileys">Smileys</option>
+                <option value="people">People</option>
+                <option value="animals">Animals</option>
+                <option value="food">Food</option>
+                <option value="activities">Activities</option>
+                <option value="travel">Travel</option>
+                <option value="objects">Objects</option>
+                <option value="symbols">Symbols</option>
+                <option value="flags">Flags</option>
+            </select>
+            <select class="filter-select" id="sortFilter">
+                <option value="name">Sort by Name</option>
+                <option value="category">Sort by Category</option>
+            </select>
+        </div>
+
+        <div class="emoji-grid" id="emojiGrid">
+            <!-- Emojis will be loaded here -->
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Emoji Hub. All rights reserved.</p>
+    </footer>
+
+    <script src="/static/catalog.js"></script>
+</body>
+</html> 

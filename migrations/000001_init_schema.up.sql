@@ -1,5 +1,5 @@
 CREATE TABLE emoji (
-  id         UUID PRIMARY KEY,
+  id         TEXT PRIMARY KEY,
   name       TEXT,
   category   TEXT,
   "group"    TEXT,
@@ -8,13 +8,14 @@ CREATE TABLE emoji (
 );
 
 CREATE TABLE favorites (
-  session_id UUID,
-  emoji_id   UUID REFERENCES emoji(id),
+  session_id TEXT,
+  emoji_id   TEXT REFERENCES emoji(id),
+  created_at TIMESTAMP DEFAULT NOW(),
   PRIMARY KEY (session_id, emoji_id)
 );
 
 CREATE TABLE llm_cache (
-  emoji_id UUID PRIMARY KEY,
+  emoji_id TEXT PRIMARY KEY,
   mood     TEXT,
   updated  TIMESTAMP DEFAULT NOW()
 );

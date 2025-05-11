@@ -54,3 +54,7 @@ func (s *EmojiService) AddFav(ctx context.Context, sess, id string) error {
 func (s *EmojiService) DelFav(ctx context.Context, sess, id string) error {
 	return s.Repo.DelFav(ctx, sess, id)
 }
+
+func (s *EmojiService) ImportEmojis(ctx context.Context, emojis []model.Emoji) error {
+	return s.Repo.ImportEmojis(ctx, emojis)
+}

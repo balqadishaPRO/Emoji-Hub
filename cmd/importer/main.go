@@ -6,9 +6,10 @@ import (
 	"log"
 	"os"
 
+	"github.com/balqadishaPRO/Emoji-Hub/internal/model"
+	"github.com/balqadishaPRO/Emoji-Hub/internal/repo"
 	"github.com/balqadishaPRO/Emoji-Hub/internal/service"
 	"github.com/joho/godotenv"
-	"github.com/lib/pq"
 )
 
 func main() {
@@ -32,31 +33,34 @@ func main() {
 
 	// 3. тянем эмодзи
 	log.Println(">> fetching Emojihub …")
-	emojis, err := service.FetchAll()
+	rawEmojis, err := service.FetchAll()
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf(">> got %d emojis\n", len(emojis))
+	log.Printf(">> got %d emojis\n", len(rawEmojis))
 
-	// 4. prepare
-	log.Println(">> preparing statement …")
-	stmt, err := db.PrepareContext(context.Background(), `
-        INSERT INTO emoji(id,name,category,"group",html_code,unicode)
-        VALUES(gen_random_uuid(),$1,$2,$3,$4,$5)
-        ON CONFLICT DO NOTHING`)
+	// Convert raw emojis to model emojis
+	emojis := make([]model.Emoji, len(rawEmojis))
+	for i, raw := range rawEmojis {
+		emojis[i] = model.Emoji{
+			ID:       raw.ID,
+			Name:     raw.Name,
+			Category: raw.Category,
+			Group:    raw.Group,
+			HtmlCode: raw.HtmlCode,
+			Unicode:  raw.Unicode,
+		}
+	}
+
+	repository, err := repo.New(dsn)
 	if err != nil {
-		log.Fatal("prepare:", err)
+		log.Fatal("repo:", err)
 	}
 
-	// 5. insert
-	for i, e := range emojis {
-		if _, err := stmt.Exec(e.Name, e.Category, e.Group,
-			pq.StringArray(e.HtmlCode), pq.StringArray(e.Unicode)); err != nil {
-			log.Println("insert:", err)
-		}
-		if i%100 == 0 {
-			log.Printf(">> inserted %d/%d\n", i, len(emojis))
-		}
+	svc := &service.EmojiService{Repo: repository}
+	if err := svc.ImportEmojis(context.Background(), emojis); err != nil {
+		log.Fatal("import:", err)
 	}
+
 	log.Println(">> import done:", len(emojis))
 }
