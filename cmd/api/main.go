@@ -29,7 +29,7 @@ func main() {
 	api := r.Group("/api")
 	{
 		api.Use(cors.New(cors.Config{
-			AllowOrigins:     []string{"https://balqadishapro.github.io"},
+			AllowOrigins:     []string{"https://balqadishapro.github.io", "http://localhost:5173"},
 			AllowMethods:     []string{"GET", "POST", "DELETE", "OPTIONS"},
 			AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
 			ExposeHeaders:    []string{"Content-Length", "Set-Cookie"},
