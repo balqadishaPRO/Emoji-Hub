@@ -30,10 +30,12 @@ func main() {
 	{
 		api.Use(middleware.Session())
 		api.Use(cors.New(cors.Config{
-			AllowOrigins:     []string{"https://balqadishapro.github.io"},
-			AllowMethods:     []string{"GET", "POST", "DELETE"},
-			AllowHeaders:     []string{"Origin", "Content-Type"},
+			AllowOrigins:     []string{"https://balqadishapro.github.io", "http://localhost:8080"},
+			AllowMethods:     []string{"GET", "POST", "DELETE", "OPTIONS"},
+			AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization", "X-Requested-With"},
+			ExposeHeaders:    []string{"Content-Length"},
 			AllowCredentials: true,
+			MaxAge:           12 * 3600, // 12 hours
 		}))
 		handler.Register(api, svc)
 	}
