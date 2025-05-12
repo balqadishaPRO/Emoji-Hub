@@ -29,13 +29,13 @@ func Session() gin.HandlerFunc {
 		if err != nil {
 			sid = uuid.New().String()
 			c.SetCookie(
-				"sid",     // name
-				sid,       // value
-				3600*24*7, // max age
-				"/",       // path
-				"",        // domain (empty allows cross-origin)
-				true,      // secure (Render uses HTTPS)
-				true,      // httpOnly
+				"sid",
+				sid,
+				3600*24*7,
+				"/",
+				"",
+				true,
+				true,
 			)
 		}
 		c.Set("sid", sid)

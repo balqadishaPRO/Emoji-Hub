@@ -26,7 +26,6 @@ func main() {
 
 	r := gin.Default()
 
-	// API routes
 	api := r.Group("/api")
 	{
 		api.Use(cors.New(cors.Config{

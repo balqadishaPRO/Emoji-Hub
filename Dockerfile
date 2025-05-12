@@ -1,10 +1,8 @@
-# Dockerfile
 FROM golang:1.24.1-alpine AS builder
 
 WORKDIR /app
 COPY . .  
 
-# Navigate to the directory containing main.go and build
 RUN cd cmd/api && \
     go mod download && \
     CGO_ENABLED=0 GOOS=linux go build -o ../../main .

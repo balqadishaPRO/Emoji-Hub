@@ -69,7 +69,6 @@ func Register(r gin.IRouter, svc *service.EmojiService) {
 		c.Status(204)
 	})
 
-	// Inside handler.Register function
 	r.OPTIONS("/emoji", handleOptions)
 	r.OPTIONS("/favorites", handleOptions)
 	r.OPTIONS("/favorites/:id", handleOptions)

@@ -49,7 +49,6 @@ func (s *EmojiService) ListFav(ctx context.Context, sid string) ([]*model.Emoji,
 		return nil, err
 	}
 
-	// Get full emoji details for each favorite
 	var emojis []*model.Emoji
 	for _, id := range favoriteIDs {
 		emoji, err := s.Repo.GetEmoji(ctx, id)
