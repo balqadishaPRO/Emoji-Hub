@@ -42,6 +42,12 @@ func Register(r gin.IRouter, svc *service.EmojiService) {
 			c.JSON(500, errResp(err))
 			return
 		}
+
+		if len(out) == 0 {
+			c.JSON(200, []interface{}{}) // Return empty array instead of null
+			return
+		}
+
 		c.JSON(200, out)
 	})
 

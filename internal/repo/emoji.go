@@ -86,3 +86,38 @@ func (r *Repo) ImportEmojis(ctx context.Context, emojis []model.Emoji) error {
 
 	return tx.Commit()
 }
+
+func (r *Repo) AddFavorite(ctx context.Context, sid string, emojiID string) error {
+	query := `
+        INSERT INTO favorites (session_id, emoji_id)
+        VALUES ($1, $2)
+        ON CONFLICT (session_id, emoji_id) DO NOTHING
+    `
+	_, err := r.DB.ExecContext(ctx, query, sid, emojiID)
+	return err
+}
+
+func (r *Repo) RemoveFavorite(ctx context.Context, sid string, emojiID string) error {
+	query := `DELETE FROM favorites WHERE session_id = $1 AND emoji_id = $2`
+	_, err := r.DB.ExecContext(ctx, query, sid, emojiID)
+	return err
+}
+
+func (r *Repo) GetFavorites(ctx context.Context, sid string) ([]string, error) {
+	query := `SELECT emoji_id FROM favorites WHERE session_id = $1`
+	rows, err := r.DB.QueryContext(ctx, query, sid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var ids []string
+	for rows.Next() {
+		var id string
+		if err := rows.Scan(&id); err != nil {
+			return nil, err
+		}
+		ids = append(ids, id)
+	}
+	return ids, nil
+}

@@ -43,16 +43,31 @@ func (s *EmojiService) Detail(ctx context.Context, id string) (model.EmojiDetail
 	return model.EmojiDetail{Emoji: e, Mood: mood}, nil
 }
 
-func (s *EmojiService) ListFav(ctx context.Context, sess string) ([]model.Emoji, error) {
-	return s.Repo.ListFav(ctx, sess)
+func (s *EmojiService) ListFav(ctx context.Context, sid string) ([]*model.Emoji, error) {
+	favoriteIDs, err := s.Repo.GetFavorites(ctx, sid)
+	if err != nil {
+		return nil, err
+	}
+
+	// Get full emoji details for each favorite
+	var emojis []*model.Emoji
+	for _, id := range favoriteIDs {
+		emoji, err := s.Repo.GetEmoji(ctx, id)
+		if err != nil {
+			return nil, err
+		}
+		emojis = append(emojis, &emoji)
+	}
+
+	return emojis, nil
 }
 
-func (s *EmojiService) AddFav(ctx context.Context, sess, id string) error {
-	return s.Repo.AddFav(ctx, sess, id)
+func (s *EmojiService) AddFav(ctx context.Context, sid string, emojiID string) error {
+	return s.Repo.AddFavorite(ctx, sid, emojiID)
 }
 
-func (s *EmojiService) DelFav(ctx context.Context, sess, id string) error {
-	return s.Repo.DelFav(ctx, sess, id)
+func (s *EmojiService) DelFav(ctx context.Context, sid string, emojiID string) error {
+	return s.Repo.RemoveFavorite(ctx, sid, emojiID)
 }
 
 func (s *EmojiService) ImportEmojis(ctx context.Context, emojis []model.Emoji) error {
