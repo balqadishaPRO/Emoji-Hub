@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"time"
 
 	"github.com/balqadishaPRO/Emoji-Hub/internal/handler"
 	"github.com/balqadishaPRO/Emoji-Hub/internal/middleware"
@@ -29,12 +30,12 @@ func main() {
 	api := r.Group("/api")
 	{
 		api.Use(cors.New(cors.Config{
-			AllowOrigins:     []string{"https://balqadishapro.github.io", "http://localhost:8080"},
+			AllowOrigins:     []string{"https://balqadishapro.github.io"},
 			AllowMethods:     []string{"GET", "POST", "DELETE", "OPTIONS"},
-			AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization", "X-Requested-With"},
-			ExposeHeaders:    []string{"Content-Length", "Set-Cookie"}, // Add Set-Cookie if using cookies
+			AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+			ExposeHeaders:    []string{"Content-Length", "Set-Cookie"},
 			AllowCredentials: true,
-			MaxAge:           12 * 3600,
+			MaxAge:           12 * time.Hour,
 		}))
 		api.Use(middleware.Session())
 		handler.Register(api, svc)

@@ -2,6 +2,7 @@ package repo
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/balqadishaPRO/Emoji-Hub/internal/model"
 	"github.com/lib/pq"
@@ -88,19 +89,28 @@ func (r *Repo) ImportEmojis(ctx context.Context, emojis []model.Emoji) error {
 }
 
 func (r *Repo) AddFavorite(ctx context.Context, sid string, emojiID string) error {
-	query := `
-        INSERT INTO favorites (session_id, emoji_id)
-        VALUES ($1, $2)
-        ON CONFLICT (session_id, emoji_id) DO NOTHING
-    `
-	_, err := r.DB.ExecContext(ctx, query, sid, emojiID)
-	return err
+	_, err := r.DB.ExecContext(ctx,
+		`INSERT INTO favorites (session_id, emoji_id)
+         VALUES ($1, $2)
+         ON CONFLICT DO NOTHING`,
+		sid, emojiID,
+	)
+	if err != nil {
+		return fmt.Errorf("add favorite failed: %w", err)
+	}
+	return nil
 }
 
 func (r *Repo) RemoveFavorite(ctx context.Context, sid string, emojiID string) error {
-	query := `DELETE FROM favorites WHERE session_id = $1 AND emoji_id = $2`
-	_, err := r.DB.ExecContext(ctx, query, sid, emojiID)
-	return err
+	_, err := r.DB.ExecContext(ctx,
+		`DELETE FROM favorites 
+         WHERE session_id=$1 AND emoji_id=$2`,
+		sid, emojiID,
+	)
+	if err != nil {
+		return fmt.Errorf("remove favorite failed: %w", err)
+	}
+	return nil
 }
 
 func (r *Repo) GetFavorites(ctx context.Context, sid string) ([]string, error) {

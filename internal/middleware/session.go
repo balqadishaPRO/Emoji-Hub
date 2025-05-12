@@ -25,14 +25,19 @@ import (
 
 func Session() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// Get existing session ID from cookie
 		sid, err := c.Cookie("sid")
 		if err != nil {
-			// Generate new session ID
 			sid = uuid.New().String()
-			c.SetCookie("sid", sid, 3600*24*7, "/", "emoji-hub-6odk.onrender.com", true, true)
+			c.SetCookie(
+				"sid",     // name
+				sid,       // value
+				3600*24*7, // max age
+				"/",       // path
+				"",        // domain (empty allows cross-origin)
+				true,      // secure (Render uses HTTPS)
+				true,      // httpOnly
+			)
 		}
-
 		c.Set("sid", sid)
 		c.Next()
 	}
