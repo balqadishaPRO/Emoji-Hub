@@ -32,9 +32,9 @@ func main() {
 			AllowOrigins:     []string{"https://balqadishapro.github.io", "http://localhost:8080"},
 			AllowMethods:     []string{"GET", "POST", "DELETE", "OPTIONS"},
 			AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization", "X-Requested-With"},
-			ExposeHeaders:    []string{"Content-Length"},
+			ExposeHeaders:    []string{"Content-Length", "Set-Cookie"}, // Add Set-Cookie if using cookies
 			AllowCredentials: true,
-			MaxAge:           12 * 3600, // 12 hours
+			MaxAge:           12 * 3600,
 		}))
 		api.Use(middleware.Session())
 		handler.Register(api, svc)

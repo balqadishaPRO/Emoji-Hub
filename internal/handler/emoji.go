@@ -62,6 +62,19 @@ func Register(r gin.IRouter, svc *service.EmojiService) {
 		}
 		c.Status(204)
 	})
+
+	// Inside handler.Register function
+	r.OPTIONS("/emoji", handleOptions)
+	r.OPTIONS("/favorites", handleOptions)
+	r.OPTIONS("/favorites/:id", handleOptions)
+}
+
+func handleOptions(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", "https://balqadishapro.github.io")
+	c.Header("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
+	c.Header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization, X-Requested-With")
+	c.Header("Access-Control-Allow-Credentials", "true")
+	c.Status(204)
 }
 
 func atoi(s string) int       { n, _ := strconv.Atoi(s); return n }

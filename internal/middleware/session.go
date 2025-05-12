@@ -7,6 +7,10 @@ import (
 
 func Session() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		if c.Request.Method == "OPTIONS" {
+			c.Next() // Skip session checks for OPTIONS
+			return
+		}
 		const name = "session_id"
 		if sid, err := c.Cookie(name); err == nil {
 			c.Set("sid", sid)
