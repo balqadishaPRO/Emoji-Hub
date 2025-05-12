@@ -28,7 +28,6 @@ func main() {
 	// API routes
 	api := r.Group("/api")
 	{
-		api.Use(middleware.Session())
 		api.Use(cors.New(cors.Config{
 			AllowOrigins:     []string{"https://balqadishapro.github.io", "http://localhost:8080"},
 			AllowMethods:     []string{"GET", "POST", "DELETE", "OPTIONS"},
@@ -37,6 +36,7 @@ func main() {
 			AllowCredentials: true,
 			MaxAge:           12 * 3600, // 12 hours
 		}))
+		api.Use(middleware.Session())
 		handler.Register(api, svc)
 	}
 
