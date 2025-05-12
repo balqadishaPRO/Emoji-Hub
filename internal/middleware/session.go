@@ -33,7 +33,7 @@ func Session() gin.HandlerFunc {
 				sid,
 				3600*24*7,
 				"/",
-				"",
+				"emoji-hub-6odk.onrender.com",
 				true,
 				true,
 			)

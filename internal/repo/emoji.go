@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/balqadishaPRO/Emoji-Hub/internal/model"
 	"github.com/lib/pq"
@@ -91,12 +92,12 @@ func (r *Repo) ImportEmojis(ctx context.Context, emojis []model.Emoji) error {
 func (r *Repo) AddFavorite(ctx context.Context, sid string, emojiID string) error {
 	_, err := r.DB.ExecContext(ctx,
 		`INSERT INTO favorites (session_id, emoji_id)
-         VALUES ($1, $2)
-         ON CONFLICT DO NOTHING`,
+         VALUES ($1, $2)`,
 		sid, emojiID,
 	)
 	if err != nil {
-		return fmt.Errorf("add favorite failed: %w", err)
+		log.Printf("AddFavorite error: %v", err)
+		return err
 	}
 	return nil
 }
